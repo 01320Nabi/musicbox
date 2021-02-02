@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MusicBox</title>
+        <style>
+            textarea#sheet {
+                font-family: 'Courier New', Courier, monospace;
+            }
+        </style>
+        <script src="playmusicbox.js"></script>
+    </head>
+    <body>
+        <button id="play">Play</button>
+        <select id="type">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="triangle">Triangle</option>
+            <option value="sawtooth">Sawtooth</option>
+        </select>
+        <textarea id="sheet"></textarea>
+    </body>
+    <script>
+        "use strict"
+        let play = document.getElementById("play")
+        let type = document.getElementById("type")
+        let sheet = document.getElementById("sheet")
+        onload = () => {
+            sheet.value = localStorage.getItem("sheet") ? localStorage.getItem("sheet") : ""
+            play.addEventListener("click", () => {
+                playMusicBox(Function(`"use-strict";return (${sheet.value})`)(), type.value)
+            })
+        }
+        onunload = () => {
+            localStorage.setItem("sheet", sheet.value)
+        }
+    </script>
+</html>
