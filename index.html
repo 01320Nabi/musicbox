@@ -7,7 +7,6 @@
                 font-family: 'Courier New', Courier, monospace;
             }
         </style>
-        <script src="playmusicbox.js"></script>
     </head>
     <body>
         <button id="play">Play</button>
@@ -19,19 +18,18 @@
         </select>
         <textarea id="sheet"></textarea>
     </body>
-    <script>
+    <script type="module">
         "use strict"
+        import playMusicBox from "./playmusicbox.js"
         let play = document.getElementById("play")
         let type = document.getElementById("type")
         let sheet = document.getElementById("sheet")
         onload = () => {
             sheet.value = localStorage.getItem("sheet") ? localStorage.getItem("sheet") : ""
             play.addEventListener("click", () => {
-                try {
-                    playMusicBox(Function(`"use-strict";return (${sheet.value})`)(), type.value)
-                } catch (error) {
-                    alert(error)
-                }
+                play.setAttribute("disabled", "true")
+                playMusicBox(Function(`"use-strict";return (${sheet.value})`)(), type.value)
+                .then(() => play.removeAttribute("disabled"))
             })
         }
         onunload = () => {
