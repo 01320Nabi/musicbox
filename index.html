@@ -27,7 +27,11 @@
         onload = () => {
             sheet.value = localStorage.getItem("sheet") ? localStorage.getItem("sheet") : ""
             play.addEventListener("click", () => {
-                playMusicBox(Function(`"use-strict";return (${sheet.value})`)(), type.value)
+                try {
+                    playMusicBox(Function(`"use-strict";return (${sheet.value})`)(), type.value)
+                } catch (error) {
+                    alert(error)
+                }
             })
         }
         onunload = () => {
