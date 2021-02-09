@@ -3,20 +3,62 @@
     <head>
         <title>MusicBox</title>
         <style>
+            body {
+                background-color: wheat;
+                margin: 0;
+            }
+            .fangsong {
+                font-family: fangsong;
+            }
+            .inherit {
+                margin: inherit;
+                padding: inherit;
+            }
+            header {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                width: 100%;
+                text-align: center;
+                background-color: burlywood;
+            }
+            .edit {
+                margin-top: 50px;
+                font-family: monospace;
+                text-align: center;
+            }
             textarea#sheet {
-                font-family: 'Courier New', Courier, monospace;
+                width: 50%;
+                height: 500px;
+                resize: none;
+            }
+            .control {
+                text-align: center;
+            }
+            #display {
+                display: none;
+                text-align: center;
             }
         </style>
     </head>
     <body>
-        <button id="play">Play</button>
-        <select id="type">
-            <option value="sine">Sine</option>
-            <option value="square">Square</option>
-            <option value="triangle">Triangle</option>
-            <option value="sawtooth">Sawtooth</option>
-        </select>
-        <textarea id="sheet"></textarea>
+        <header>
+            <h1 class="fangsong inherit">MusicBox</h1>
+        </header>
+        <div class="edit">
+            <textarea id="sheet"></textarea>
+        </div>
+        <div class="control">
+            <button id="play">Play</button>
+            <select id="type">
+                <option value="sine">Sine</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+                <option value="sawtooth">Sawtooth</option>
+            </select>
+        </div>
+        <div id="display" class="fangsong">
+            is playing...
+        </div>
     </body>
     <script type="module">
         "use strict"
@@ -24,12 +66,17 @@
         let play = document.getElementById("play")
         let type = document.getElementById("type")
         let sheet = document.getElementById("sheet")
+        let display = document.getElementById("display")
         onload = () => {
-            sheet.value = localStorage.getItem("sheet") ? localStorage.getItem("sheet") : ""
+            localStorage.getItem("sheet") ? sheet.value = localStorage.getItem("sheet") : fetch("./raindrop_flower.json").then(response => response.text()).then(text => sheet.value = text)
             play.addEventListener("click", () => {
                 play.setAttribute("disabled", "true")
+                display.style.display = "block";
                 playMusicBox(Function(`"use-strict";return (${sheet.value})`)(), type.value)
-                .then(() => play.removeAttribute("disabled"))
+                .then(() => {
+                    play.removeAttribute("disabled")
+                    display.style.display = "none";
+                })
             })
         }
         onunload = () => {
