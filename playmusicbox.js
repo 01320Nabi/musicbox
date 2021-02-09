@@ -24,21 +24,25 @@ export default function(sheet, type) {
         const getFrequency = (tune) => {
             return 440 * Math.pow(2, tunes[tune.substr(0, 2)] / 12) * Math.pow(2, tune[2]-4)
         }
-        let speed = sheet.bpm / 60
+        const speed = sheet.bpm ? 60 / sheet.bpm : 1
+        const sign = sheet.signature ? sheet.signature : 1
         let len = 0
         let nodes = []
         sheet.notes.forEach(note => {
+            const msr = note.msr - 1
+            const pos = note.pos
+            const key = note.key
             let oscillator = ctx.createOscillator()
             let gain = ctx.createGain()
-            oscillator.frequency.value = getFrequency(note.key)
+            oscillator.frequency.value = getFrequency(key)
             oscillator.type = type
-            oscillator.start(speed * (note.msr * sheet.signature * 4 + note.pos))
-            oscillator.stop(speed * (note.msr * sheet.signature * 4 + note.pos) + 0.5)
+            oscillator.start(speed * (msr * sign * 4 + pos))
+            oscillator.stop(speed * (msr * sign * 4 + pos) + 0.5)
             oscillator.connect(gain)
-            gain.gain.setValueCurveAtTime([note.pwr / 25, 0], speed * (note.msr * sheet.signature * 4 + note.pos), 0.5)
+            gain.gain.setValueCurveAtTime([0.1, 0], speed * (msr * sign * 4 + pos), 0.5)
             gain.connect(ctx.destination)
             nodes.push(oscillator, gain)
-            len = Math.max(len, speed * (note.msr * sheet.signature * 4 + note.pos) + 1)
+            len = Math.max(len, speed * (msr * sign * 4 + pos) + 1)
         });
         setTimeout(() => {
             while(nodes.length) {
