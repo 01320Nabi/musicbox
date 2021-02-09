@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>MusicBox</title>
+        <title>Music Box</title>
         <style>
             body {
                 background-color: wheat;
                 margin: 0;
             }
-            .fangsong {
-                font-family: fangsong;
-            }
-            .inherit {
-                margin: inherit;
-                padding: inherit;
+            .cursive {
+                font-family: cursive;
             }
             header {
                 padding-top: 10px;
@@ -42,7 +38,7 @@
     </head>
     <body>
         <header>
-            <h1 class="fangsong inherit">MusicBox</h1>
+            <h1 class="cursive">Music Box</h1>
         </header>
         <div class="edit">
             <textarea id="sheet"></textarea>
@@ -56,7 +52,7 @@
                 <option value="sawtooth">Sawtooth</option>
             </select>
         </div>
-        <div id="display" class="fangsong">
+        <div id="display" class="cursive">
             Playing...
         </div>
     </body>
@@ -80,7 +76,7 @@
             })
         }
         onunload = () => {
-            //localStorage.setItem("sheet", sheet.value)
+            localStorage.setItem("sheet", sheet.value)
         }
     </script>
 </html>
