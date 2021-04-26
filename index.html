@@ -44,6 +44,11 @@
             <h1 class="cursive">Music Box</h1>
         </header>
         <div class="edit">
+            <select id="select">
+                <option value="">Custom</option>
+                <option value="raindrop_flower">Raindrop Flower</option>
+                <option value="dimigo_bell_start">Dimigo Bell (Start)</option>
+            </select><br>
             <textarea id="sheet"></textarea>
         </div>
         <div class="control">
@@ -63,11 +68,25 @@
         "use strict"
         import playMusicBox from "./playmusicbox.js"
         let play = document.getElementById("play")
+        let select = document.getElementById("select")
         let type = document.getElementById("type")
         let sheet = document.getElementById("sheet")
         let display = document.getElementById("display")
+        select.onchange = () => {
+            if(select.value) {
+                fetch(`./${select.value}.json`).then(response => response.text()).then(text => sheet.value = text)
+            }
+            else {
+                sheet.value = "{\n    \"bpm\": 120,\n    \"signature\": 1,\n    \"notes\": [\n        \n    ]\n}"
+            }
+        }
+        sheet.onchange = () => {
+            select.selectedIndex = 0
+        }
         onload = () => {
-            localStorage.getItem("sheet") ? sheet.value = localStorage.getItem("sheet") : fetch("./raindrop_flower.json").then(response => response.text()).then(text => sheet.value = text)
+            if(localStorage.getItem("sheet")) {
+                sheet.value = localStorage.getItem("sheet")
+            }
             play.addEventListener("click", () => {
                 play.setAttribute("disabled", "true")
                 display.style.display = "block";
